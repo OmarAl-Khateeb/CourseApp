@@ -41,6 +41,24 @@ namespace API
             services.AddIdentityServices(_config);
             services.AddSwaggerGen(c =>
             {
+                var jwtSecurityScheme = new OpenApiSecurityScheme
+                {
+                    BearerFormat = "JWT",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
+                    Description = "JWT Authorization",
+
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+
+                c.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {{ jwtSecurityScheme, Array.Empty<string>() }});
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
             });
         }
@@ -53,7 +71,10 @@ namespace API
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
+                app.UseSwaggerUI(c => {
+                    c.ConfigObject.AdditionalItems.Add("persistAuthorization","true");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1");
+                    });
             }
 
             app.UseHttpsRedirection();

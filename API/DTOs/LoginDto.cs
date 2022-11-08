@@ -8,9 +8,7 @@ namespace API.DTOs
 {
     public class LoginDto
     {
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
+        [Required] public string Username { get; set; }
+        [Required] [StringLength(16, MinimumLength = 8)] public string Password { get; set; }
     }
 }
