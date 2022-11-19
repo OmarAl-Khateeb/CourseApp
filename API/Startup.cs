@@ -71,14 +71,12 @@ namespace API
         {
             
             app.UseMiddleware<ExceptionMiddleware>();
-            if (env.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => {
-                    c.ConfigObject.AdditionalItems.Add("persistAuthorization","true");
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1");
-                    });
-            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.ConfigObject.AdditionalItems.Add("persistAuthorization","true");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1");
+            });
 
             app.UseHttpsRedirection();
 
